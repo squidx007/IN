@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         VERSION = "${BUILD_NUMBER}"
-        PROJECT = 'SQUARE'
+        PROJECT = 'square'
         IMAGE = "${PROJECT}:${VERSION}"
         ECR = '654654488846.dkr.ecr.ap-south-1.amazonaws.com/jenkins'
         ECRDETAILS = 'ecr:ap-south-1'
