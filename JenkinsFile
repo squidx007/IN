@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    environment {
+        VERSION = "${BUILD_NUMBER}"
+        PROJECT = 'SQUARE'
+        IMAGE = "${PROJECT}:${VERSION}"
+        ECR = '654654488846.dkr.ecr.ap-south-1.amazonaws.com/jenkins'
+        ECRDETAILS = 'ecr:ap-south-1'
+    }
+
+    stages {
+        stage('Fetching Code') {
+            steps {
+                // Fetch code from GitHub
+                git branch: 'main', url: 'https://github.com/squidx007/BITBUCKET.git'
+            }
+        }
+
+        stage('Building Docker Image') {
+            steps {
+                // Build Docker image with proper tagging
+                sh "docker build -t ${IMAGE} ."
+            }
+        }
+
+        stage('Pushing Docker Image to ECR') {
+            steps {
+                // Login to AWS ECR
+                sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${ECR}"
+            }
+        }
+
+        stage('Pushing Image') {
+            steps {
+                // Push Docker image to ECR
+                sh "docker push ${IMAGE}"
+            }
+        }
+    }
+}
